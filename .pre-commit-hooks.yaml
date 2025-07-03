@@ -1,0 +1,6 @@
+- id: dart-todo-check
+  name: Dart TODO Check
+  entry: dart scripts/dart_todo_check.dart
+  language: system
+  types: [dart]
+  stages: [pre-commit]
