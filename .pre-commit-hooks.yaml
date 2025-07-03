@@ -8,4 +8,4 @@
   name: Prevent Direct Push to Master/Develop
   entry: dart scripts/prevent_direct_push.dart
   language: system
-  stages: [pre-push]
+  stages: [pre-push, pre-commit]
