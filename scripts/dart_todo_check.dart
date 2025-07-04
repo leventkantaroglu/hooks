@@ -39,26 +39,31 @@ void main() async {
     for (final line in todos) {
       final parts = line.split(':');
       if (parts.length > 1) {
-        final file = parts[0];
-        if (file.endsWith('.dart')) {
+        final file = parts[0].trim();
+        // Dosya adı boş değilse ve tekrar eklenmemişse ekle
+        if (file.isNotEmpty && file.endsWith('.dart')) {
           todoFiles.add(file);
         }
       }
     }
-    print('Aşağıdaki dosyalarda TODO bulundu:');
-    for (final file in todoFiles) {
-      print('- $file');
-    }
-    // macOS için tek bir native dialog göster, toplam TO DO sayısını ve dosya listesini belirt
-    final fileList = todoFiles.join("\n");
-    final dialogResult = await Process.run('osascript', [
-      '-e',
-      'display dialog "$todoCount adet TODO bulundu!\nAşağıdaki dosyalarda TODO bulundu:\n$fileList\nLütfen gözden geçirin." buttons {"Vazgeç", "Yine de Devam Et"} default button "Yine de Devam Et" with icon caution',
-    ]);
-    if (dialogResult.stdout != null &&
-        dialogResult.stdout.toString().contains('Vazgeç')) {
-      print('Commit kullanıcı tarafından iptal edildi.');
-      exit(1); // Commit'i engelle
+    if (todoFiles.isEmpty) {
+      print('UYARI: TODO bulundu ama dosya adı tespit edilemedi!');
+    } else {
+      print('Aşağıdaki dosyalarda TODO bulundu:');
+      for (final file in todoFiles) {
+        print('- $file');
+      }
+      // macOS için tek bir native dialog göster, toplam TO DO sayısını ve dosya listesini belirt
+      final fileList = todoFiles.join("\n");
+      final dialogResult = await Process.run('osascript', [
+        '-e',
+        'display dialog "$todoCount adet TODO bulundu!\nAşağıdaki dosyalarda TODO bulundu:\n$fileList\nLütfen gözden geçirin." buttons {"Vazgeç", "Yine de Devam Et"} default button "Yine de Devam Et" with icon caution',
+      ]);
+      if (dialogResult.stdout != null &&
+          dialogResult.stdout.toString().contains('Vazgeç')) {
+        print('Commit kullanıcı tarafından iptal edildi.');
+        exit(1); // Commit'i engelle
+      }
     }
     exit(0);
   } else {
