@@ -20,7 +20,7 @@ void main() async {
     exit(0);
   }
 
-  // Sadece bu dosyalarda TODO ara
+  // Sadece bu dosyalarda TO DO ara
   final grepArgs = <String>['-n', 'TODO', ...files];
   final result = await Process.run('grep', grepArgs);
   if (result.exitCode == 0) {
@@ -37,8 +37,13 @@ void main() async {
     print(result.stdout);
     final todoFiles = <String>{};
     for (final line in todos) {
-      final file = line.split(':').first;
-      todoFiles.add(file);
+      final parts = line.split(':');
+      if (parts.length > 1) {
+        final file = parts[0];
+        if (file.endsWith('.dart')) {
+          todoFiles.add(file);
+        }
+      }
     }
     print('Aşağıdaki dosyalarda TODO bulundu:');
     for (final file in todoFiles) {

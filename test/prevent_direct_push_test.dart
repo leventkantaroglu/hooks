@@ -1,5 +1,4 @@
 import 'package:test/test.dart';
-import 'dart:io';
 
 void main() {
   group('prevent_direct_push', () {
