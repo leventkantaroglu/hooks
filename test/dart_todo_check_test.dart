@@ -6,7 +6,8 @@ Set<String> extractTodoFiles(List<String> todos) {
     final parts = line.split(':');
     if (parts.length > 1) {
       final file = parts[0].trim();
-      if (file.isNotEmpty && file.endsWith('.dart')) {
+      // Sadece dosya adı boş değilse ve içinde '/' karakteri varsa (yani path ise) ve .dart ile bitiyorsa ekle
+      if (file.isNotEmpty && file.endsWith('.dart') && file.contains('/')) {
         todoFiles.add(file);
       }
     }
