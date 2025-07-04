@@ -4,7 +4,25 @@
 import 'dart:io';
 
 void main() async {
-  final result = await Process.run('grep', ['-r', 'TODO', 'lib/', 'test/']);
+  // Sadece staged dosyaları al
+  final gitResult = await Process.run('git', [
+    'diff',
+    '--cached',
+    '--name-only',
+  ]);
+  final files = gitResult.stdout
+      .toString()
+      .split('\n')
+      .where((f) => f.endsWith('.dart'))
+      .toList();
+  if (files.isEmpty) {
+    print('✅ No staged Dart files to check.');
+    exit(0);
+  }
+
+  // Sadece bu dosyalarda TODO ara
+  final grepArgs = <String>['-n', 'TODO', ...files];
+  final result = await Process.run('grep', grepArgs);
   if (result.exitCode == 0) {
     final todos = result.stdout
         .toString()
@@ -13,7 +31,9 @@ void main() async {
         .where((line) => line.isNotEmpty)
         .toList();
     final todoCount = todos.length;
-    print('⚠️  UYARI: $todoCount adet TODO bulundu. Lütfen gözden geçirin.');
+    print(
+      '⚠️  UYARI: $todoCount adet TODO bulundu. Sadece işlem yapılan dosyalarda arandı.',
+    );
     print(result.stdout);
     // macOS için tek bir native dialog göster, toplam TO DO sayısını belirt
     final dialogResult = await Process.run('osascript', [
@@ -27,7 +47,7 @@ void main() async {
     }
     exit(0);
   } else {
-    print('✅ No TODO comments found.');
+    print('✅ No TODO comments found in staged files.');
     exit(0);
   }
 }
