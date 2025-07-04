@@ -35,13 +35,23 @@ void main() async {
       '⚠️  UYARI: $todoCount adet TODO bulundu. Sadece işlem yapılan dosyalarda arandı.',
     );
     print(result.stdout);
-    // macOS için tek bir native dialog göster, toplam TO DO sayısını belirt
+    final todoFiles = <String>{};
+    for (final line in todos) {
+      final file = line.split(':').first;
+      todoFiles.add(file);
+    }
+    print('Aşağıdaki dosyalarda TODO bulundu:');
+    for (final file in todoFiles) {
+      print('- $file');
+    }
+    // macOS için tek bir native dialog göster, toplam TO DO sayısını ve dosya listesini belirt
+    final fileList = todoFiles.join("\n");
     final dialogResult = await Process.run('osascript', [
       '-e',
-      'display dialog "$todoCount adet TODO bulundu! Lütfen gözden geçirin." buttons {"İptal", "Devam"} default button "Devam" with icon caution',
+      'display dialog "$todoCount adet TODO bulundu!\nAşağıdaki dosyalarda TODO bulundu:\n$fileList\nLütfen gözden geçirin." buttons {"Vazgeç", "Yine de Devam Et"} default button "Yine de Devam Et" with icon caution',
     ]);
     if (dialogResult.stdout != null &&
-        dialogResult.stdout.toString().contains('İptal')) {
+        dialogResult.stdout.toString().contains('Vazgeç')) {
       print('Commit kullanıcı tarafından iptal edildi.');
       exit(1); // Commit'i engelle
     }
