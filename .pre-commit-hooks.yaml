@@ -1,11 +1,11 @@
 - id: dart_todo_check
   name: Dart TODO Check
-  entry: dart scripts/dart_todo_check.dart
-  language: system
+  entry: scripts/dart_todo_check.dart
+  language: script
   types: [dart]
   stages: [pre-commit]
 - id: prevent_direct_push
   name: Prevent Direct Push to Master/Develop
-  entry: dart scripts/prevent_direct_push.dart
-  language: system
+  entry: scripts/prevent_direct_push.dart
+  language: script
   stages: [pre-push, pre-commit]
