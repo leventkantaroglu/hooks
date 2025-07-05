@@ -13,6 +13,11 @@ void main(List<String> args) async {
     exit(0);
   }
 
+  print('Kontrol edilen dosyalar:');
+  for (final file in files) {
+    print('- $file');
+  }
+
   // Sadece bu dosyalarda TO DO ara
   final grepArgs = <String>['-n', 'TODO', ...files];
   final result = await Process.run('grep', grepArgs);
