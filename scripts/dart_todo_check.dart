@@ -37,11 +37,10 @@ void main() async {
     print(result.stdout);
     final todoFiles = <String>{};
     for (final line in todos) {
-      final parts = line.split(':');
-      if (parts.length > 1) {
-        final file = parts[0].trim();
-        // Dosya adı boş değilse ve tekrar eklenmemişse ekle
-        if (file.isNotEmpty && file.endsWith('.dart')) {
+      final match = RegExp(r'^(.*\.dart):').firstMatch(line);
+      if (match != null) {
+        final file = match.group(1);
+        if (file != null && file.isNotEmpty) {
           todoFiles.add(file);
         }
       }

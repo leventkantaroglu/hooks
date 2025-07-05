@@ -3,11 +3,10 @@ import 'package:test/test.dart';
 Set<String> extractTodoFiles(List<String> todos) {
   final todoFiles = <String>{};
   for (final line in todos) {
-    final parts = line.split(':');
-    if (parts.length > 1) {
-      final file = parts[0].trim();
-      // Sadece dosya adı boş değilse ve .dart ile bitiyorsa ekle (içinde '/' olmasa da ekle)
-      if (file.isNotEmpty && file.endsWith('.dart')) {
+    final match = RegExp(r'^(.*\.dart):').firstMatch(line);
+    if (match != null) {
+      final file = match.group(1);
+      if (file != null && file.isNotEmpty) {
         todoFiles.add(file);
       }
     }
