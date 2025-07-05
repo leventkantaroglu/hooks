@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:test/test.dart';
 
 Set<String> extractTodoFiles(List<String> todos) {
@@ -61,6 +63,40 @@ void main() {
           .toList();
       final todoFiles = extractTodoFiles(todos);
       expect(todoFiles.isEmpty, isTrue);
+    });
+
+    test('Find TODOs in real file: pubspec.yaml (should be empty)', () async {
+      final file = File('pubspec.yaml');
+      final lines = await file.readAsLines();
+      final todos = lines.where((line) => line.contains('TODO')).toList();
+      final todoFiles = extractTodoFiles(todos);
+      expect(todoFiles.isEmpty, isTrue);
+    });
+
+    test('Find TODOs in real file: scripts/dart_todo_check.dart', () async {
+      final file = File('scripts/dart_todo_check.dart');
+      final lines = await file.readAsLines();
+      final todos = <String>[];
+      for (var i = 0; i < lines.length; i++) {
+        if (lines[i].contains('TODO')) {
+          todos.add('scripts/dart_todo_check.dart:${i + 1}:${lines[i]}');
+        }
+      }
+      final todoFiles = extractTodoFiles(todos);
+      expect(todoFiles.contains('scripts/dart_todo_check.dart'), isTrue);
+    });
+
+    test('Find TODOs in real file: lib/core/app.dart', () async {
+      final file = File('lib/core/app.dart');
+      final lines = await file.readAsLines();
+      final todos = <String>[];
+      for (var i = 0; i < lines.length; i++) {
+        if (lines[i].contains('TODO')) {
+          todos.add('lib/core/app.dart:${i + 1}:${lines[i]}');
+        }
+      }
+      final todoFiles = extractTodoFiles(todos);
+      expect(todoFiles.contains('lib/core/app.dart'), isTrue);
     });
   });
 }
