@@ -9,6 +9,11 @@ void main() async {
     '--cached',
     '--name-only',
   ]);
+
+  print('Kontrol edilen dosyalar:');
+  for (final file in gitResult.stdout.toString().split('\n')) {
+    print('- $file');
+  }
   final files = gitResult.stdout
       .toString()
       .split('\n')
@@ -17,11 +22,6 @@ void main() async {
   if (files.isEmpty) {
     print('✅ No staged Dart files to check.');
     exit(0);
-  }
-
-  print('Kontrol edilen dosyalar:');
-  for (final file in files) {
-    print('- $file');
   }
 
   // Sadece bu dosyalarda TO DO ara
