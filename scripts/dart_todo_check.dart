@@ -16,6 +16,7 @@ void main() async {
   for (final file in gitResult.stdout.toString().split('\n')) {
     print('- $file');
   }
+  exit(1);
   final files = gitResult.stdout
       .toString()
       .split('\n')
