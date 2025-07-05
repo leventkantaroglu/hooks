@@ -3,18 +3,11 @@
 // A simple pre-commit hook for Dart: checks for TO DO comments and fails if any are found.
 import 'dart:io';
 
-void main() async {
-  // Sadece staged dosyaları al
-  final gitResult = await Process.run('git', [
-    'diff',
-    '--cached',
-    '--name-only',
-  ]);
-  final files = gitResult.stdout
-      .toString()
-      .split('\n')
-      .where((f) => f.endsWith('.dart'))
-      .toList();
+void main(List<String> args) async {
+  print('Current working directory: ${Directory.current.path}');
+  print('Files passed by pre-commit: $args');
+
+  final files = args.where((f) => f.endsWith('.dart')).toList();
   if (files.isEmpty) {
     print('✅ No staged Dart files to check.');
     exit(0);
@@ -23,6 +16,7 @@ void main() async {
   // Sadece bu dosyalarda TO DO ara
   final grepArgs = <String>['-n', 'TODO', ...files];
   final result = await Process.run('grep', grepArgs);
+
   if (result.exitCode == 0) {
     final todos = result.stdout
         .toString()

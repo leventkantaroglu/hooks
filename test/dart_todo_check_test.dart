@@ -97,6 +97,7 @@ void main() {
       }
       final todoFiles = extractTodoFiles(todos);
       expect(todoFiles.contains('lib/core/app.dart'), isTrue);
+      expect(todos.length, equals(2)); // Dosyada 2 adet TO DO olmalı
     });
   });
 }
