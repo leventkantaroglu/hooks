@@ -1,9 +1,24 @@
+- id: no_way
+  name: No Way
+  entry: scripts/no_way.dart
+  language: script
+  types: [dart]
+  stages: [pre-commit]
+
+- id: hello_world
+  name: Hello World
+  entry: scripts/hello_world.dart
+  language: script
+  types: [dart]
+  stages: [pre-commit]
+
 - id: dart_todo_check
   name: Dart TODO Check
   entry: scripts/dart_todo_check.dart
   language: script
   types: [dart]
   stages: [pre-commit]
+  
 - id: prevent_direct_push
   name: Prevent Direct Push to Master/Develop
   entry: scripts/prevent_direct_push.dart
